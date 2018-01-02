@@ -19,8 +19,8 @@ void setup() {
         Serial.println("AMG88xx is not available. Please connect the sensor.");
         while(1);
     }
-  display.init();
-  display.flipScreenVertically();
+    display.init();
+    display.flipScreenVertically();
 }
 
 
@@ -29,6 +29,20 @@ void black_rect(int x, int y, int size){
     display.drawLine(x,y,x+size,y);
     display.drawLine(x+size,y,x+size,y+size);
     display.drawLine(x,y+size,x+size,y+size);
+    display.drawRect(x,y,size,size);
+}
+
+void circle(int x, int y, int radius){
+    int r = radius/2;
+    display.drawCircle(x+r, y+r, r);
+}
+
+void cross(int x, int y, int size){
+    
+    for(int i=0; i < size; ++i){
+        display.setPixel(x+i, y+i);
+        display.setPixel(x+size-i, y+i);
+    }
 }
 
 void white_rect(int x,int y, int size){
@@ -41,19 +55,22 @@ void white_rect(int x,int y, int size){
 void draw_display(float pixels[], float thd){
     int x=0;
     int y=0;
-    int size = 5;
+    int size = 7;
     for(int i =0; i < pixel_array_size; ++i){
         if(i%8==0){y+=size;x=0;}
         x = size * (i%8);
-        if(pixels[i] >= thd){
-            Serial.print(y);
-            Serial.print(",");
+        if(pixels[i] > 24 && pixels[i] <= 29){
+            cross(x,y,size);
+        }else if(pixels[i] > 29 && pixels[i] <= 34){
+            circle(x,y,size);
+        
+        }else if(pixels[i] > 34){
             white_rect(x,y,size);
         }else{
-            Serial.print(y);
-            Serial.print(",");
             black_rect(x,y,size);
-        }
+            
+        };
+
     }
     Serial.println("");
 
