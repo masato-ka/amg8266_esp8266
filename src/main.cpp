@@ -14,7 +14,7 @@ SSD1306  display(0x3c, 4, 5);
 
 String ssid = "";
 String password = "";
-
+String serverURL = "http://localhost:8080/api/v1/thermography";
 
 void setup() {
     Serial.begin(115200);
@@ -28,7 +28,6 @@ void setup() {
     display.init();
     display.flipScreenVertically();
 
-//    WiFi.begin(ssid, password);
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED) {
@@ -113,7 +112,7 @@ void loop() {
     payload += "]";
     Serial.println(payload);
     HTTPClient http;
-    http.begin("http://localhost:8080/api/v1/thermography");
+    http.begin(serverURL);
     http.addHeader("Content-Type","application/json");
     http.POST(payload);
 
